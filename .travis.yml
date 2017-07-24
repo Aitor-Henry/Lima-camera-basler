@@ -9,10 +9,8 @@ services:
   - docker
   
 before_install:
-  - ls -l
-  - pwd
   - docker pull esrfbliss/lima-ci-debian8
-  - docker run --name lima-ci-docker -v 'pwd':/src-ci -dit esrfbliss/lima-ci-debian8
+  - docker run --name lima-ci-docker -v $(pwd):/src-ci/ -dit esrfbliss/lima-ci-debian8
   
 script:
   - echo "Installing pylon5 on docker image"
@@ -25,7 +23,7 @@ script:
   - docker exec lima-ci-docker /bin/sh -c 'cd /src-ci && ls -l'
   
   - echo "copy the camera code from the pull request"
-  - docker exec lima-ci-docker /bin/sh -c 'cd /root/Lima/camera/basler && cp -R /scr-ci/* .'
+  - docker exec lima-ci-docker /bin/sh -c 'cd /root/Lima/camera/basler && cp -R /src-ci/* .'
   
   - echo "Compiling Lima and camera basler with options"
   - docker exec lima-ci-docker /bin/sh -c 'cd /root/Lima/ && ./install.sh camera/basler python tests cbf fits tiff hdf5 config'
