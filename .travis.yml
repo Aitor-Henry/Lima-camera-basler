@@ -9,6 +9,8 @@ services:
   - docker
   
 before_install:
+  - ls -l
+  - pwd
   - docker pull esrfbliss/lima-ci-debian8
   - docker run --name lima-ci-docker -v 'pwd':/src-ci -dit esrfbliss/lima-ci-debian8
   
@@ -18,6 +20,9 @@ script:
   
   - echo "Unset esrf proxy from docker and cloning GitHub repositories"
   - docker exec lima-ci-docker /bin/sh -c 'unset https_proxy && unset http_proxy && cd /root && ./install_lima_submodule'
+  
+  - echo "let's see what is inside /src-ci"
+  - docker exec lima-ci-docker /bin/sh -c 'cd /src-ci && ls -l'
   
   - echo "copy the camera code from the pull request"
   - docker exec lima-ci-docker /bin/sh -c 'cd /root/Lima/camera/basler && cp -R /scr-ci/* .'
